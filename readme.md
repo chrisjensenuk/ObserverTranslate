@@ -34,7 +34,7 @@ A demo project to demonstrate the below:
 
 - Add Retry Policy
 
-- Add Logging
+- ~~Add Logging~~
 
 - ~~Implement thread safety~~
 
@@ -47,6 +47,8 @@ The languages translators are driven by config.  To add an extra language add an
 
 For each language added a new observer is created by the IoC. See `Startup.cs`
 
-Each  `TranslateObserver` logs their translation to the `ITranslateLog`. As this class can be called by many observables it is configured as a singleton and a lock is used to ensure thread safety in the concrete implementation.
+Each `TranslateObserver` outputs their translation to the `ITranslateOutputter`. As this class can be called by many observables it is configured as a singleton and a lock is used to ensure thread safety in the concrete implementation.
 
 The translate.googleapis.com site use is very limited. It only allows about 100 requests per one hour period and there after returns a **429 error (Too many requests)**.
+
+Added Serilog to provider structured logging. It's currently configured to write json structured logs to a daily text file `logYYYYMMDD.txt`.

@@ -1,8 +1,10 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using ObserverTranslate.Services;
+using ObserverTranslate.IoC;
+using Serilog;
+using Serilog.Exceptions;
+using Serilog.Formatting.Compact;
 using System;
-using System.Collections.Generic;
 
 namespace ObserverTranslate
 {
@@ -12,34 +14,51 @@ namespace ObserverTranslate
 
         public Startup()
         {
-            var builder = new ConfigurationBuilder()
+            Log.Logger = new LoggerConfiguration()
+               .WriteTo.File(
+                formatter: new RenderedCompactJsonFormatter(),
+                path: "log.txt", 
+                rollingInterval: RollingInterval.Day
+                )
+               .Enrich.WithExceptionDetails()
+               .CreateLogger();
+
+            try
+            {
+                Log.Information("Application Startup");
+
+                var builder = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json");
 
-            Configuration = builder.Build();
+                Configuration = builder.Build();
+            }
+            catch(Exception ex)
+            {
+                Log.Fatal(ex, "Exception during startup");
+                throw;
+            }
         }
-
 
         public void ConfigureServices(IServiceCollection services)
         {
-            //HttpClients
-            services.AddHttpClient<ITranslator, GoogleTranslator>(client =>
+            try
             {
-                //https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=de&dt=t&q=cat
-                client.BaseAddress = new Uri(Configuration.GetSection("googleTranslator").Get<GoogleTranslatorConfig>().BaseAddress);
-                client.DefaultRequestHeaders.Add("Accept", "application/json");
-            });
+                Log.Information("Begin configure services");
 
-            services.AddSingleton<ITranslateLog, TranslateLog>();
-            services.AddSingleton<ITranslateObservable, TranslateObservable>();
+                //logging
+                services.AddLogging(lb =>
+                {
+                    lb.AddSerilog(dispose: true);
+                });
 
-            var targetLanguages = Configuration.GetSection("targetLanguages").Get<IEnumerable<string>>();
+                services.AddApplicationServices(Configuration);
 
-            foreach(var targetLanguage in targetLanguages)
+                Log.Information("End configure services");
+            }
+            catch(Exception ex)
             {
-                services.AddSingleton<ITranslateObserver>(s => new TranslateObserver(
-                    s.GetRequiredService<ITranslator>(),
-                    s.GetRequiredService<ITranslateLog>(),
-                    targetLanguage));
+                Log.Fatal(ex, "Exception during service configuration");
+                throw;
             }
          }
     }

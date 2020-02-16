@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ObserverTranslate
 {
-    public class TranslateLog : ITranslateLog
+    public class TranslateOutputter : ITranslateLog
     {
         private static ConsoleColor DefaultConsoleForegroundColour;
 
@@ -11,7 +11,7 @@ namespace ObserverTranslate
         private readonly IDictionary<string, ConsoleColor> _languageColours = new Dictionary<string, ConsoleColor>();
         private readonly int totalColoursAvailable = Enum.GetNames(typeof(ConsoleColor)).Length - 1; //don't include black (0)
 
-        public TranslateLog()
+        public TranslateOutputter()
         {
             DefaultConsoleForegroundColour = Console.ForegroundColor;
         }
