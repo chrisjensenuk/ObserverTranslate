@@ -31,6 +31,10 @@ namespace ObserverTranslate.IoC
                     s.GetRequiredService<ITranslateLog>(),
                     targetLanguage));
             }
+
+            services.AddSingleton<IConsole, WinConsole>();
+
+            services.AddSingleton<App>();
         }
     }
 }

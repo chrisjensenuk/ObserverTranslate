@@ -2,7 +2,7 @@
 
 A .NET Core 3.1 Console Application. Type a word or phrase and it gets simultaneously translated into multiple languages using the Google Translate API service.
 
-A demo project to demonstrate the below:
+A spike project to demonstrate the below:
 
 - Implement a simple application around the Observer pattern.
 
@@ -38,7 +38,7 @@ A demo project to demonstrate the below:
 
 - ~~Implement thread safety~~
 
-- Unit test TranslateLog.GetNextColour
+- ~~Unit test TranslateLog.GetNextColour~~
 
   
 

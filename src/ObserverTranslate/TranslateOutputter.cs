@@ -1,47 +1,49 @@
-﻿using System;
+﻿using ObserverTranslate.Services;
+using System;
 using System.Collections.Generic;
 
 namespace ObserverTranslate
 {
     public class TranslateOutputter : ITranslateLog
     {
-        private static ConsoleColor DefaultConsoleForegroundColour;
+        private ConsoleColor _defaultConsoleForegroundColour;
 
-        private readonly object locker = new object();
+        private readonly IConsole _console;
+
         private readonly IDictionary<string, ConsoleColor> _languageColours = new Dictionary<string, ConsoleColor>();
         private readonly int totalColoursAvailable = Enum.GetNames(typeof(ConsoleColor)).Length - 1; //don't include black (0)
 
-        public TranslateOutputter()
+        public TranslateOutputter(IConsole console)
         {
-            DefaultConsoleForegroundColour = Console.ForegroundColor;
+            _console = console;
+            _defaultConsoleForegroundColour = _console.ForegroundColor;
         }
 
         public void WriteLine(string targetLanguage, string translatedText)
         {
-            lock (locker)
+            lock (_languageColours)
             {
                 if (!_languageColours.ContainsKey(targetLanguage))
                 {
                     _languageColours.Add(targetLanguage, GetNextColour());
                 }
 
-                Console.ForegroundColor = _languageColours[targetLanguage];
-                Console.WriteLine($"{targetLanguage.ToUpper()}: {translatedText}");
+                _console.ForegroundColor = _languageColours[targetLanguage];
+                _console.WriteLine($"{targetLanguage.ToUpper()}: {translatedText}");
 
-                Console.ForegroundColor = DefaultConsoleForegroundColour;
+                _console.ForegroundColor = _defaultConsoleForegroundColour;
             }
         }
 
         private ConsoleColor GetNextColour()
         {
             var colourPosition = _languageColours.Count;
-            var remainder = colourPosition % totalColoursAvailable;
-            colourPosition = remainder > 0 ? remainder : colourPosition;
+            var remainder = (colourPosition) % totalColoursAvailable;
 
             //ConsoleColor 0 is black so don't use it
-            colourPosition++;
+            remainder++;
 
-            return (ConsoleColor)colourPosition;
+            return (ConsoleColor)remainder;
         }
     }
 }

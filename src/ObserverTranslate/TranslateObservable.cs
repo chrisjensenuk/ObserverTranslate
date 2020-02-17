@@ -6,7 +6,7 @@ namespace ObserverTranslate
 {
     public class TranslateObservable : ITranslateObservable
     {
-        private const string _sourceLanguage = "en";
+        private const string SourceLanguage = "en";
         private readonly IEnumerable<ITranslateObserver> _subscribers;
 
 
@@ -24,7 +24,7 @@ namespace ObserverTranslate
 
             foreach(var subscriber in _subscribers)
             {
-                tasks.Add(subscriber.TranslateAsync(_sourceLanguage, textToTranslate));
+                tasks.Add(subscriber.TranslateAsync(SourceLanguage, textToTranslate));
             }
 
             return Task.WhenAll(tasks);
