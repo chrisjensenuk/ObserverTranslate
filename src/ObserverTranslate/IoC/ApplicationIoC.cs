@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ObserverTranslate.Services;
+using Polly;
 using System;
 using System.Collections.Generic;
 
@@ -16,7 +17,13 @@ namespace ObserverTranslate.IoC
                 //https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=de&dt=t&q=cat
                 client.BaseAddress = new Uri(configuration.GetSection("googleTranslator").Get<GoogleTranslatorConfig>().BaseAddress);
                 client.DefaultRequestHeaders.Add("Accept", "application/json");
-            });
+            })
+            .AddTransientHttpErrorPolicy(builder => builder.WaitAndRetryAsync(new[]
+            {
+                TimeSpan.FromSeconds(1),
+                TimeSpan.FromSeconds(2),
+                TimeSpan.FromSeconds(3)
+            }));
 
             //Add application IoC
             services.AddSingleton<ITranslateLog, TranslateOutputter>();

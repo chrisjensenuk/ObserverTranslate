@@ -26,13 +26,13 @@ A spike project to demonstrate the below:
 
 - ~~Add HttpClientFactory for querying translation API~~
 
-- Add Exception handling
+- ~~Add Exception handling~~
 
 - ~~Add multiple translation services~~
 
 - ~~Add Observer Pattern~~
 
-- Add Retry Policy
+- ~~Add Retry Policy~~
 
 - ~~Add Logging~~
 
@@ -43,12 +43,14 @@ A spike project to demonstrate the below:
   
 
 ## Notes
-The languages translators are driven by config.  To add an extra language add an entry to the `targetLanguages` in `appicationsettings.json` . The list of available languages can be found here: https://cloud.google.com/translate/docs/languages
+I wanted the language translators (observers) to be driven by config.  To add an extra translator, add an entry to the `targetLanguages` array in `appicationsettings.json` . The list of available languages can be found here: https://cloud.google.com/translate/docs/languages
 
-For each language added a new observer is created by the IoC. See `Startup.cs`
+The IoC is responsible for subscribing the observers (`TranslateObserver`) to the observable (`TranslateObservable`). See `ApplicationIoC.cs`
 
 Each `TranslateObserver` outputs their translation to the `ITranslateOutputter`. As this class can be called by many observables it is configured as a singleton and a lock is used to ensure thread safety in the concrete implementation.
 
-The translate.googleapis.com site use is very limited. It only allows about 100 requests per one hour period and there after returns a **429 error (Too many requests)**.
+The user of translate.googleapis.com site is very limited. It only allows about 100 requests per one hour period and there after returns a **429 error (Too many requests)**. So if you start to get errors wait an hour or so :)
 
-Added Serilog to provider structured logging. It's currently configured to write json structured logs to a daily text file `logYYYYMMDD.txt`.
+I added Serilog to provider structured logging. It's currently configured to write json structured logs to a daily text file `logYYYYMMDD.txt`.
+
+Added a Polly retry policy to the Http Client Factory to retry calls to translate.googleapis.com.
