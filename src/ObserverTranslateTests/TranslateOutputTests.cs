@@ -4,14 +4,14 @@ using Xunit;
 
 namespace ObserverTranslateTests
 {
-    public class TranslateOutputterTests
+    public class TranslateOutputTests
     {
         [Fact]
         public void WriteLine_ShouldWriteUsingNextColour()
         {
             //Arrange
             var testConsole = new TestConsole();
-            var translateOutputter = new TranslateOutputter(testConsole);
+            var translateOutputter = new TranslateOutput(testConsole);
 
             //Act
             for(var language = 0; language <= 20; language++)

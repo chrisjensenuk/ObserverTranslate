@@ -4,16 +4,17 @@ using System.Collections.Generic;
 
 namespace ObserverTranslate
 {
-    public class TranslateOutputter : ITranslateLog
+    public class TranslateOutput : ITranslateOutput
     {
         private ConsoleColor _defaultConsoleForegroundColour;
 
         private readonly IConsole _console;
-
         private readonly IDictionary<string, ConsoleColor> _languageColours = new Dictionary<string, ConsoleColor>();
-        private readonly int totalColoursAvailable = Enum.GetNames(typeof(ConsoleColor)).Length - 1; //don't include black (0)
 
-        public TranslateOutputter(IConsole console)
+        //don't include black (0) so -1
+        private readonly int totalColoursAvailable = Enum.GetNames(typeof(ConsoleColor)).Length - 1;
+
+        public TranslateOutput(IConsole console)
         {
             _console = console;
             _defaultConsoleForegroundColour = _console.ForegroundColor;

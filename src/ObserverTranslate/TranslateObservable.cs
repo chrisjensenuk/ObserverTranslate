@@ -9,7 +9,6 @@ namespace ObserverTranslate
         private const string SourceLanguage = "en";
         private readonly IEnumerable<ITranslateObserver> _subscribers;
 
-
         public TranslateObservable(IEnumerable<ITranslateObserver> subscribers)
         {
             _subscribers = subscribers;

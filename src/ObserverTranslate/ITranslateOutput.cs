@@ -1,6 +1,6 @@
 ﻿namespace ObserverTranslate
 {
-    public interface ITranslateLog
+    public interface ITranslateOutput
     {
         void WriteLine(string targetLanguage, string translatedText);
     }

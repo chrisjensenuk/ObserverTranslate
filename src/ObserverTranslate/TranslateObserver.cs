@@ -7,12 +7,12 @@ namespace ObserverTranslate
     {
         private readonly ITranslator _translator;
         private readonly string _targetLanguage;
-        private readonly ITranslateLog _log;
+        private readonly ITranslateOutput _output;
 
-        public TranslateObserver(ITranslator translator, ITranslateLog log, string targetLanguage)
+        public TranslateObserver(ITranslator translator, ITranslateOutput output, string targetLanguage)
         {
             _translator = translator;
-            _log = log;
+            _output = output;
             _targetLanguage = targetLanguage;
         }
 
@@ -20,7 +20,7 @@ namespace ObserverTranslate
         {
             var translatedText = await _translator.TranslateAsync(sourceLanguage, _targetLanguage, textToTranslate);
 
-            _log.WriteLine(_targetLanguage, translatedText);
+            _output.WriteLine(_targetLanguage, translatedText);
         }
     }
 }

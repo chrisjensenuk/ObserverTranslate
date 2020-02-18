@@ -47,9 +47,9 @@ I wanted the language translators (observers) to be driven by config.  To add an
 
 The IoC is responsible for subscribing the observers (`TranslateObserver`) to the observable (`TranslateObservable`). See `ApplicationIoC.cs`
 
-Each `TranslateObserver` outputs their translation to the `ITranslateOutputter`. As this class can be called by many observables it is configured as a singleton and a lock is used to ensure thread safety in the concrete implementation.
+Each `TranslateObserver` outputs their translation to the `ITranslateOutput`. As this class can be called by many observables it is configured as a singleton and a lock is used to ensure thread safety in the concrete implementation.
 
-The user of translate.googleapis.com site is very limited. It only allows about 100 requests per one hour period and there after returns a **429 error (Too many requests)**. So if you start to get errors wait an hour or so :)
+The use of translate.googleapis.com site is very limited. It only allows about 100 requests per one hour period and there after returns a **429 error (Too many requests)**. So if you start to get errors wait an hour or so :)
 
 I added Serilog to provider structured logging. It's currently configured to write json structured logs to a daily text file `logYYYYMMDD.txt`.
 

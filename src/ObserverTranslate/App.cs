@@ -1,8 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using ObserverTranslate.Services;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace ObserverTranslate
@@ -40,7 +38,7 @@ namespace ObserverTranslate
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "error in Main");
+                _logger.LogError(ex, "Fatal error");
                 _console.WriteLine(ex.Message);
                 throw;
             }

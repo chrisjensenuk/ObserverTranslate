@@ -26,7 +26,7 @@ namespace ObserverTranslate.IoC
             }));
 
             //Add application IoC
-            services.AddSingleton<ITranslateLog, TranslateOutputter>();
+            services.AddSingleton<ITranslateOutput, TranslateOutput>();
             services.AddSingleton<ITranslateObservable, TranslateObservable>();
 
             var targetLanguages = configuration.GetSection("targetLanguages").Get<IEnumerable<string>>();
@@ -35,7 +35,7 @@ namespace ObserverTranslate.IoC
             {
                 services.AddSingleton<ITranslateObserver>(s => new TranslateObserver(
                     s.GetRequiredService<ITranslator>(),
-                    s.GetRequiredService<ITranslateLog>(),
+                    s.GetRequiredService<ITranslateOutput>(),
                     targetLanguage));
             }
 
